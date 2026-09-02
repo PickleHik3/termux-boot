@@ -11,9 +11,9 @@ android {
     // The edition this plugin is built for. It must join the launcher edition's sharedUserId and
     // talk to that edition's service, so an edition branch changes these three values and nothing
     // else. See "Editions" in README.md.
-    def termuxPackageName = "com.termux"
-    def termuxBootAppName = "Termux:Boot"
-    def apkBasename = "termux-boot-app"
+    def termuxPackageName = "com.termux.launcher.nix"
+    def termuxBootAppName = "TLNix:Boot"
+    def apkBasename = "termux-boot-nix-app"
 
     defaultConfig {
         applicationId termuxPackageName + ".boot"

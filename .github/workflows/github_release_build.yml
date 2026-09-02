@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       release_tag:
-        description: 'Tag to create the release under (e.g. v0.8.1)'
+        description: 'Tag to create the release under (e.g. nix-v0.8.1)'
         required: true
 
 jobs:
@@ -16,7 +16,7 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       RELEASE_TAG: ${{ inputs.release_tag }}
       # One line per edition branch; see "Editions" in README.md.
-      EDITION_NOTES: 'Termux:Boot for the Termux edition of Termux Launcher (com.termux.boot). Debug-signed with the shared testkey, so it installs beside the launcher builds published from PickleHik3/termux-launcher.'
+      EDITION_NOTES: 'Termux:Boot for the Termux Launcher Nix edition (com.termux.launcher.nix.boot). Debug-signed with the shared testkey — installs alongside the nix-edition launcher.'
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
