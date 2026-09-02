@@ -1,25 +1,52 @@
 # Termux:Boot
 
-[![Build status](https://github.com/termux/termux-boot/workflows/Build/badge.svg)](https://github.com/termux/termux-boot/actions)
-[![Join the chat at https://gitter.im/termux/termux](https://badges.gitter.im/termux/termux.svg)](https://gitter.im/termux/termux)
+[![Build status](https://github.com/PickleHik3/termux-boot/actions/workflows/github_action_build.yml/badge.svg)](https://github.com/PickleHik3/termux-boot/actions/workflows/github_action_build.yml)
 
 A [Termux](https://termux.dev) add-on app to run programs at boot.
 
-When developing (or packaging), note that this app needs to be signed with the
-same key as the main Termux app in order to have the permission to execute scripts.
+This is the [Termux Launcher](https://github.com/PickleHik3/termux-launcher) fork of
+[termux/termux-boot](https://github.com/termux/termux-boot). It exists because a plugin only gets
+permission to run your scripts when it is signed with the same key as the terminal app beside it
+and joins that app's shared user, and the launcher ships under three package names. The releases
+here are built against those three, from the same shared debug key the launcher builds use.
+
+## Editions
+
+One build of this app belongs to exactly one launcher edition. Installing the wrong one gives you
+an app that starts, shows this page, and then silently runs nothing at boot.
+
+| Launcher edition | Branch | This app | Release tag |
+| --- | --- | --- | --- |
+| Termux (`com.termux`) | `master` | `com.termux.boot` | `v0.8.1` |
+| Nix (`com.termux.launcher.nix`) | `nix-pkg` | `com.termux.launcher.nix.boot` | `nix-v0.8.1` |
+| VAJ (`io.vaj.tl`) | `io-vaj-package` | `io.vaj.tl.boot` | `v0.8.1-vaj` |
+
+An edition branch changes three values at the top of `app/build.gradle` — the launcher package
+name, the app label and the APK basename — and the release notes line in
+`.github/workflows/github_release_build.yml`. Everything else is shared: the manifest takes the
+shared user id and the label from manifest placeholders, and the code takes the service, action,
+intent extra, URI scheme and boot script directory from `BuildConfig.TERMUX_PACKAGE_NAME`. Nothing
+else in the tree may name a package. Features go on `master` and reach the editions by merging it.
+
+Every package in a shared user id must target sdk 28 or lower, and Android remembers the highest
+target sdk any member has ever declared. Raising `targetSdkVersion` here would stop the launcher
+beside it from executing anything in its prefix, and reinstalling does not undo it.
 
 ## Installation
 
-Termux:Boot application can be obtained from [F-Droid](https://f-droid.org/en/packages/com.termux.boot/).
+Download the APK for your launcher edition from
+[Releases](https://github.com/PickleHik3/termux-boot/releases), or take a per-commit build from a
+[Github Actions](https://github.com/PickleHik3/termux-boot/actions/workflows/github_action_build.yml)
+run.
 
-Additionally we provide per-commit debug builds for those who want to try
-out the latest features or test their pull request. This build can be obtained
-from one of the workflow runs listed on [Github Actions](https://github.com/termux/termux-boot/actions/workflows/github_action_build.yml?query=branch%3Amaster+event%3Apush)
-page.
+Upstream's F-Droid build (`com.termux.boot` signed by Termux) works only with an F-Droid Termux
+install, not with any launcher edition. Signature keys of all offered builds are different: before
+you switch installation source you have to uninstall the terminal app and every plugin beside it.
 
-Signature keys of all offered builds are different. Before you switch the
-installation source, you will have to uninstall the Termux application and
-all currently installed plugins. Check https://github.com/termux/termux-app#Installation for more info.
+## Releasing
+
+Dispatch `github_release_build.yml` on the edition's branch with the tag from the table above. It
+builds the APK, writes `checksums-sha256.txt` and creates the release.
 
 ## How to use
 
@@ -39,6 +66,9 @@ create the following file at `~/.termux/boot/start-sshd`:
 termux-wake-lock
 sshd
 ```
+
+(On the Nix and VAJ editions the shebang and paths carry that edition's package name instead of
+`com.termux`; the app's own overview page shows the right one.)
 
 To start
 [termux-services](https://wiki.termux.com/wiki/Termux-services), which

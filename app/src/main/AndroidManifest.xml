@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Every package joining the sharedUserId below must target sdk 28 or lower: Android picks the
+     SELinux domain for the whole shared user from the highest target sdk among its members, and
+     only untrusted_app_25/untrusted_app_27 may execute files under the app data directory. Do not
+     raise targetSdkVersion here without raising it in the launcher first. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:sharedUserId="com.termux">
+    android:sharedUserId="${TERMUX_PACKAGE_NAME}">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -9,7 +13,7 @@
     <application
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
+        android:label="${TERMUX_BOOT_APP_NAME}"
         android:supportsRtl="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".BootActivity">

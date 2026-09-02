@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:height="108dp"
     android:width="108dp"
@@ -5,30 +6,33 @@
     android:viewportHeight="108">
 
     <path
-        android:fillColor="#000000"
+        android:fillColor="#202837"
         android:pathData="M18,54
                           A36,36 0 1,1 90,54
                           A36,36 0 1,1 18,54 Z" />
 
-    <!-- Keep in sync with adaptive ic_foreground.xml: -->
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M34,38
-                          h6
-                          l12,16
-                          l-12,16
-                          h-6
-                          l12,-16
-                          "
-        />
+    <!-- Keep in sync with adaptive ic_foreground.xml. Solid mid-gradient color
+         because pre-API-24 launchers cannot render vector gradients. -->
+    <group
+        android:pivotX="54"
+        android:pivotY="54"
+        android:scaleX="0.44"
+        android:scaleY="0.44">
 
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M56,66
-                          h18
-                          v4
-                          h-18
-                          "
-        />
+        <!-- ring, open at the top -->
+        <path
+            android:pathData="M70.49,29.02 A33,33 0 1 1 35.51,29.02"
+            android:strokeColor="#0CD5B9"
+            android:strokeWidth="7.5"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
 
+        <!-- bar -->
+        <path
+            android:pathData="M53,16 L53,50"
+            android:strokeColor="#0CD5B9"
+            android:strokeWidth="7.5"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+    </group>
 </vector>

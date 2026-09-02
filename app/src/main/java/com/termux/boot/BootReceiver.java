@@ -22,7 +22,8 @@ public class BootReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (!Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) return;
 
-        @SuppressLint("SdCardPath") final String BOOT_SCRIPT_PATH = "/data/data/com.termux/files/home/.termux/boot";
+        @SuppressLint("SdCardPath") final String BOOT_SCRIPT_PATH =
+            "/data/data/" + BuildConfig.TERMUX_PACKAGE_NAME + "/files/home/.termux/boot";
         final File BOOT_SCRIPT_DIR = new File(BOOT_SCRIPT_PATH);
         File[] files = BOOT_SCRIPT_DIR.listFiles();
         if (files == null) files = new File[0];
