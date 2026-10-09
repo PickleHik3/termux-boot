@@ -16,7 +16,7 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       RELEASE_TAG: ${{ inputs.release_tag }}
       # One line per edition branch; see "Editions" in README.md.
-      EDITION_NOTES: 'Termux:Boot for the Termux edition of Termux Launcher (com.termux.boot). Debug-signed with the shared testkey, so it installs beside the launcher builds published from PickleHik3/termux-launcher.'
+      EDITION_NOTES: 'Termux:Boot for the Termux edition of Termux Launcher (com.termux.boot). A release build signed with the shared testkey, so it installs beside the launcher builds published from PickleHik3/termux-launcher.'
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
@@ -31,15 +31,22 @@ jobs:
         shell: bash
         run: |
           set -e
-          APK_DIR_PATH="./app/build/outputs/apk/debug"
-          APK_VERSION_TAG="${RELEASE_TAG}+github.debug"
+          # The release build type: not debuggable, signed with the shared test key (app/build.gradle).
+          APK_DIR_PATH="./app/build/outputs/apk/release"
+          APK_VERSION_TAG="${RELEASE_TAG}+github.release"
 
           export TERMUX_BOOT_APP_BUILD__APK_VERSION_TAG="$APK_VERSION_TAG" # Used by app/build.gradle
-          ./gradlew assembleDebug
+          ./gradlew assembleRelease
 
           # The APK basename carries the edition, so take it from the build rather than repeat it.
           APK_PATH="$(ls "$APK_DIR_PATH"/*.apk)"
           test -f "$APK_PATH"
+          AAPT2="$(find "$ANDROID_HOME/build-tools" -name aapt2 | sort -V | tail -n 1)"
+          test -n "$AAPT2"
+          if "$AAPT2" dump badging "$APK_PATH" | grep -q application-debuggable; then
+            echo "Built APK is debuggable: $APK_PATH" >&2
+            exit 1
+          fi
           (cd "$APK_DIR_PATH"; sha256sum "$(basename "$APK_PATH")" > checksums-sha256.txt)
           cat "$APK_DIR_PATH/checksums-sha256.txt"
 
